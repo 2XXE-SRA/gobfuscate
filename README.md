@@ -22,6 +22,8 @@ Usage: gobfuscate [flags] pkg_name out_path
     	no encrypted package name for go build command (works when main package has CGO code)
   -nostatic
     	do not statically link
+  -nosymbols
+    	don't obfuscate symbols
   -outdir
     	output a full GOPATH
   -padding string
