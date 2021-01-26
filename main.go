@@ -22,6 +22,7 @@ var (
 	noStaticLink        bool
 	preservePackageName bool
 	verbose             bool
+	noSymbols			bool
 )
 
 func main() {
@@ -34,6 +35,7 @@ func main() {
 		"no encrypted package name for go build command (works when main package has CGO code)")
 	flag.BoolVar(&verbose, "verbose", false, "verbose mode")
 	flag.StringVar(&tags, "tags", "", "tags are passed to the go compiler")
+    flag.BoolVar(&noSymbols, "nosymbols", false, "don't obfuscate symbols")
 
 	flag.Parse()
 
@@ -94,10 +96,12 @@ func obfuscate(pkgName, outPath string) bool {
 		fmt.Fprintln(os.Stderr, "Failed to obfuscate strings:", err)
 		return false
 	}
-	log.Println("Obfuscating symbols...")
-	if err := ObfuscateSymbols(newGopath, n); err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to obfuscate symbols:", err)
-		return false
+	if !noSymbols {
+		log.Println("Obfuscating symbols...")
+		if err := ObfuscateSymbols(newGopath, n); err != nil {
+			fmt.Fprintln(os.Stderr, "Failed to obfuscate symbols:", err)
+			return false
+		}
 	}
 
 	if outputGopath {
